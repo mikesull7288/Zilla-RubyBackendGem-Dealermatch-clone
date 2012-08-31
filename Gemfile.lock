@@ -1,0 +1,45 @@
+GIT
+  remote: git@github.com:mdemin914/zapi.git
+  revision: 273e539dff18e2dc60467b5dc5bb4976f337a12f
+  specs:
+    zapi (0.0.4)
+
+PATH
+  remote: .
+  specs:
+    zillabackend (0.0.0)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    akami (1.2.0)
+      gyoku (>= 0.4.0)
+      nokogiri (>= 1.4.0)
+    builder (3.0.0)
+    gyoku (0.4.6)
+      builder (>= 2.1.2)
+    httpi (1.1.1)
+      rack
+    nokogiri (1.5.5)
+    nori (1.1.3)
+    rack (1.4.1)
+    savon (1.1.0)
+      akami (~> 1.2.0)
+      builder (>= 2.1.2)
+      gyoku (~> 0.4.5)
+      httpi (~> 1.1.0)
+      nokogiri (>= 1.4.0)
+      nori (~> 1.1.0)
+      wasabi (~> 2.5.0)
+    wasabi (2.5.1)
+      httpi (~> 1.0)
+      nokogiri (>= 1.4.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  builder
+  savon
+  zapi!
+  zillabackend!
