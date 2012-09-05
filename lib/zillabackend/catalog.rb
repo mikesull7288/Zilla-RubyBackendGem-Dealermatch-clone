@@ -2,15 +2,13 @@ module ZillaBackend
 	class Catalog
 		attr_accessor :last_sync
 
-		def self.refresh_cache()
+		def self.refresh_cache
 			
 			Zuora.configure(username: "smogger914@yahoo.com", password: "Fo!d3168", sandbox: true, logger: true)
 
-			
 			where_str = "EffectiveStartDate<'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' and EffectiveEndDate>'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"'"
 			products = Zuora::Objects::Product.where(where_str)
 			
-
 			catalog_products = Array.new
 			#setup the catalog_product objects
 			products.each do |p|
@@ -23,7 +21,6 @@ module ZillaBackend
 				rate_plans = Zuora::Objects::ProductRatePlan.where(rate_plan_where)
 				catalog_product.rate_plans = Array.new
 				rate_plans.each do |rp|
-					#set the catalog rate plan values
 					catalog_rate_plan = ZillaBackend::Models::CatalogRateplan.new
 					catalog_rate_plan.id = rp.id
 					catalog_rate_plan.name = rp.name
@@ -52,11 +49,30 @@ module ZillaBackend
 				end
 				catalog_products << catalog_product
 			end
-
-
-  			catalog_products
-  			#write to cache
+  			write_to_cache catalog_products
+  			return catalog_products
+		end
+		#write the catalog_products to the cache
+		def self.write_to_cache(input)
+			File.open("product_cache.txt", 'w') {|f| f.write(input.to_json) }
+		end
+		#read the catalog from the cache
+		def self.read_from_cache
+			json = File.read('product_cache.txt')
+			catalog_products = JSON.parse(json)
+		end
+		#get a rate plan from the cache given a rate plan id
+		def self.get_rate_plan(id)
+			catalog_products = read_from_cache
+			catalog_products.each do |p|
+				p["rate_plans"].each do |rp|
+					if rp["id"] == id
+						return rp
+					end
+				end
+			end
 		end
 	end
+
 
 end
