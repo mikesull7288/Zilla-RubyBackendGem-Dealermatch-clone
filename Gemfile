@@ -1,7 +1,6 @@
 source :rubygems
 
-	gem 'savon'
 	gem 'builder'
-	gem 'zapi', :git => 'git@github.com:mdemin914/zapi.git'
+	gem 'zuora', :git => 'git@github.com:zuorasc/zuora.git', :require => 'zuora'
 	
 gemspec

@@ -6,6 +6,6 @@ Gem::Specification.new do |s|
   s.description = "zilla backen libraries"
   s.authors     = ["Maks Demin"]
   s.email       = 'blah'
-  s.files       = ["lib/zillabackend.rb"]
+  s.files       = Dir['lib/*']+Dir['lib/models/*']
   s.homepage    = ''
 end

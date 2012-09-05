@@ -1,11 +1,5 @@
 module ZillaBackend
-
-	class CatalogCharge
+	class Models::CatalogCharge
 		attr_accessor :id, :name, :description, :charge_model, :uom, :charge_type
-		
-		def initialize
-
-		end
 	end
-
 end

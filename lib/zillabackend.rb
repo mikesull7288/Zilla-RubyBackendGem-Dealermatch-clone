@@ -1,8 +1,7 @@
-require 'savon'
-require 'zapi'
+require 'bundler/setup'
+require 'zuora'
 
 module ZillaBackend
-	#autoload :Zconfig, 		 'zapi/zconfig'
 	autoload :Models, 		 	'zillabackend/models'
 	autoload :Catalog, 		 	'zillabackend/catalog'
 end
