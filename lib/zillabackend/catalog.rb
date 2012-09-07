@@ -50,7 +50,7 @@ module ZillaBackend
 				catalog_products << catalog_product
 			end
   			write_to_cache catalog_products
-  			return catalog_products
+  			return self.read_from_cache
 		end
 		#write the catalog_products to the cache
 		def self.write_to_cache(input)
