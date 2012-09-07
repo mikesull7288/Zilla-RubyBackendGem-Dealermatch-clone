@@ -4,7 +4,7 @@ module ZillaBackend
 
 		def self.refresh_cache
 			
-			Zuora.configure(username: Config.username, password: Config.pass, sandbox: true, logger: true)
+			Zuora.configure(username: Config.username, password: Config.pass, sandbox: Config.sandbox, logger: Config.logger)
 
 			where_str = "EffectiveStartDate<'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' and EffectiveEndDate>'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"'"
 			products = Zuora::Objects::Product.where(where_str)
@@ -50,15 +50,15 @@ module ZillaBackend
 				catalog_products << catalog_product
 			end
   			write_to_cache catalog_products
-  			return self.read_from_cache
+  			return read_from_cache
 		end
 		#write the catalog_products to the cache
 		def self.write_to_cache(input)
-			File.open("product_cache.txt", 'w') {|f| f.write(input.to_json) }
+			File.open(Config.cache_path, 'w') {|f| f.write(input.to_json) }
 		end
 		#read the catalog from the cache
 		def self.read_from_cache
-			json = File.read('product_cache.txt')
+			json = File.read(Config.cache_path)
 			catalog_products = JSON.parse(json)
 		end
 		#get a rate plan from the cache given a rate plan id

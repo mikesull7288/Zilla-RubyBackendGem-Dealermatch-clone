@@ -3,6 +3,7 @@ module ZillaBackend
 		def self.initialize(data={})
      	 	@data = {}
       		update!(data)
+      		set_defaults
 		end
 
 		def self.update!(data)
@@ -30,5 +31,19 @@ module ZillaBackend
 	       		self[sym]
 	     	end
 	    end
+	    
+	    def self.set_defaults
+	    	defaults = Hash.new
+			defaults[:show_all_products] = false
+			defaults[:grouping_field] = "zillacloudcompay__c"
+			
+			defaults[:grouping_field_values] = Array.new
+			defaults[:grouping_field_values] << "Base Product"
+			defaults[:grouping_field_values] << "Add-On Product"
+
+			defaults[:cache_path] = "product_cache.txt"
+
+			update!(defaults)
+		end
 	end
 end
