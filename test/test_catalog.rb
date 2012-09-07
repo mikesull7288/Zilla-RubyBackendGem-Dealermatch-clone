@@ -5,6 +5,7 @@ class CatalogTest < Test::Unit::TestCase
 	include ZillaBackendTestHelper
 
 	def test_get_rate_plan
+		rateplanid = 
 		actually = ZillaBackend::Catalog.get_rate_plan("4028e6963457a2a001345936b60d33fa")
 		assert_not_equal actually["name"], nil
 	end

@@ -1,29 +1,29 @@
 module ZillaBackend
 	class Config
-		def initialize(data={})
+		def self.initialize(data={})
      	 	@data = {}
       		update!(data)
 		end
 
-		def update!(data)
+		def self.update!(data)
       		data.each do |key, value|
         		self[key] = value
       		end
     	end
     	
-    	def [](key)
+    	def self.[](key)
       		@data[key.to_sym]
     	end
 
-	    def []=(key, value)
+	    def self.[]=(key, value)
 	      	if value.kind_of?(Hash)
 	        	@data[key.to_sym] = Config.new(value)
 	      	else
 	       		@data[key.to_sym] = value
 	      	end
 	    end
-	    
-	    def method_missing(sym, *args)
+
+	    def self.method_missing(sym, *args)
 	      	if sym.to_s =~ /(.+)=$/
 	        	self[$1] = args.first
 	      	else

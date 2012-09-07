@@ -4,7 +4,7 @@ module ZillaBackend
 
 		def self.refresh_cache
 			
-			Zuora.configure(username: "smogger914@yahoo.com", password: "Fo!d3168", sandbox: true, logger: true)
+			Zuora.configure(username: Config.username, password: Config.pass, sandbox: true, logger: true)
 
 			where_str = "EffectiveStartDate<'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' and EffectiveEndDate>'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"'"
 			products = Zuora::Objects::Product.where(where_str)
