@@ -5,18 +5,22 @@ class CatalogTest < Test::Unit::TestCase
 	include ZillaBackendTestHelper
 
 	def test_get_rate_plan
-		actually = ZillaBackend::Catalog.get_rate_plan("4028e6963457a2a001345936b60d33fa")
+		cache = ZillaBackend::Catalog.read_from_cache
+		rate_plan_id = cache[0]["products"][0]["rate_plans"][0]["id"]
+		actually = ZillaBackend::Catalog.get_rate_plan(rate_plan_id)
 		assert_not_equal actually["name"], nil
 	end
 
 	def test_load_from_cache
 		actually = ZillaBackend::Catalog.read_from_cache
-		assert_not_equal actually[0]["name"], nil
+		#assert_not_equal actually[0]["name"], nil
+		assert_not_equal actually[0]["products"], nil
+		
 	end
 
 	def test_refresh_catalog		
 		actually = ZillaBackend::Catalog.refresh_cache
-		assert_not_equal actually[0]["name"], nil
+		assert_not_equal actually[0]["products"], nil
 	end
 
 	#make sure the related models exist
