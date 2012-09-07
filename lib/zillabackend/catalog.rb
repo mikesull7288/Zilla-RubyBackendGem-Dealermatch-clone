@@ -6,50 +6,75 @@ module ZillaBackend
 			
 			Zuora.configure(username: Config.username, password: Config.pass, sandbox: Config.sandbox, logger: Config.logger)
 
-			where_str = "EffectiveStartDate<'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' and EffectiveEndDate>'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"'"
-			products = Zuora::Objects::Product.where(where_str)
-			
-			catalog_products = Array.new
-			#setup the catalog_product objects
-			products.each do |p|
-				catalog_product = ZillaBackend::Models::CatalogProduct.new
-				catalog_product.id = p.id
-				catalog_product.name = p.name
-				catalog_product.description = p.description ||= ""
-				#get rate plans for this product
-				rate_plan_where = "ProductId='" + catalog_product.id + "' and EffectiveStartDate<'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' and EffectiveEndDate>'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' "
-				rate_plans = Zuora::Objects::ProductRatePlan.where(rate_plan_where)
-				catalog_product.rate_plans = Array.new
-				rate_plans.each do |rp|
-					catalog_rate_plan = ZillaBackend::Models::CatalogRateplan.new
-					catalog_rate_plan.id = rp.id
-					catalog_rate_plan.name = rp.name
-					catalog_rate_plan.product_name = p.name
-					catalog_rate_plan.description = p.description ||= ""
-					catalog_rate_plan.charges = Array.new
-					plan_uom = ""
-					quantifiable = false
-					#get the charges for the rate plan
-					rate_plan_charges = Zuora::Objects::ProductRatePlanCharge.where(product_rate_plan_id: rp.id)
-					rate_plan_charges.each do |rpc|
-						catalog_charge = ZillaBackend::Models::CatalogCharge.new
-						catalog_charge.id = rpc.id
-						catalog_charge.name = rpc.name
-						catalog_charge.description = rpc.description ||= ""
-						catalog_charge.charge_model = rpc.charge_model
-						catalog_charge.charge_type = rpc.charge_type
-						if(rpc.charge_type != "Usage" && (rpc.charge_model == "Per Unit Pricing" || rpc.charge_model == "Tiered Pricing" || rpc.charge_model == "Volume Pricing"))
-							catalog_charge.uom = rpc.uom
-							plan_uom = rpc.uom
-							quantifiable = true
-						end
-						catalog_rate_plan.charges << catalog_charge
-					end
-					catalog_product.rate_plans << catalog_rate_plan
-				end
-				catalog_products << catalog_product
+			#sort the products by category if the setting true
+			field_groups = Array.new
+			num_groups = 0
+			if(Config.show_all_products)
+				num_groups = 1
+				field_groups << ''
+			else
+				num_groups = Config.grouping_field_values.length
+				field_groups = Config.grouping_field_values
 			end
-  			write_to_cache catalog_products
+			catalog_groups = Array.new
+
+			field_groups.each do |fg|
+				catalog_group = ZillaBackend::Models::CatalogGroup.new
+				catalog_group.name = fg
+				catalog_group.products = Array.new
+
+
+				where_str = "EffectiveStartDate<'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' and EffectiveEndDate>'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"'"
+				if(!Config.show_all_products)
+					where = " AND " + Config.grouping_field + " = '" + fg + "'"
+					where_str += where
+				end
+				products = Zuora::Objects::Product.where(where_str)
+				
+				catalog_products = Array.new
+				#setup the catalog_product objects
+				products.each do |p|
+					catalog_product = ZillaBackend::Models::CatalogProduct.new
+					catalog_product.id = p.id
+					catalog_product.name = p.name
+					catalog_product.description = p.description ||= ""
+					#get rate plans for this product
+					rate_plan_where = "ProductId='" + catalog_product.id + "' and EffectiveStartDate<'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' and EffectiveEndDate>'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' "
+					rate_plans = Zuora::Objects::ProductRatePlan.where(rate_plan_where)
+					catalog_product.rate_plans = Array.new
+					rate_plans.each do |rp|
+						catalog_rate_plan = ZillaBackend::Models::CatalogRateplan.new
+						catalog_rate_plan.id = rp.id
+						catalog_rate_plan.name = rp.name
+						catalog_rate_plan.product_name = p.name
+						catalog_rate_plan.description = p.description ||= ""
+						catalog_rate_plan.charges = Array.new
+						plan_uom = ""
+						quantifiable = false
+						#get the charges for the rate plan
+						rate_plan_charges = Zuora::Objects::ProductRatePlanCharge.where(product_rate_plan_id: rp.id)
+						rate_plan_charges.each do |rpc|
+							catalog_charge = ZillaBackend::Models::CatalogCharge.new
+							catalog_charge.id = rpc.id
+							catalog_charge.name = rpc.name
+							catalog_charge.description = rpc.description ||= ""
+							catalog_charge.charge_model = rpc.charge_model
+							catalog_charge.charge_type = rpc.charge_type
+							if(rpc.charge_type != "Usage" && (rpc.charge_model == "Per Unit Pricing" || rpc.charge_model == "Tiered Pricing" || rpc.charge_model == "Volume Pricing"))
+								catalog_charge.uom = rpc.uom
+								plan_uom = rpc.uom
+								quantifiable = true
+							end
+							catalog_rate_plan.charges << catalog_charge
+						end
+						catalog_product.rate_plans << catalog_rate_plan
+					end
+					catalog_products << catalog_product
+				end
+				catalog_group.products = catalog_products
+				catalog_groups << catalog_group
+			end
+  			write_to_cache catalog_groups
   			return read_from_cache
 		end
 		#write the catalog_products to the cache
@@ -59,20 +84,21 @@ module ZillaBackend
 		#read the catalog from the cache
 		def self.read_from_cache
 			json = File.read(Config.cache_path)
-			catalog_products = JSON.parse(json)
+			catalog_groups = JSON.parse(json)
 		end
 		#get a rate plan from the cache given a rate plan id
 		def self.get_rate_plan(id)
-			catalog_products = read_from_cache
-			catalog_products.each do |p|
-				p["rate_plans"].each do |rp|
-					if rp["id"] == id
-						return rp
+			catalog_groups = read_from_cache
+			
+			catalog_groups.each do |cg|
+				cg["products"].each do |p|
+					p["rate_plans"].each do |rp|
+						if rp["id"] == id
+							return rp
+						end
 					end
 				end
 			end
 		end
 	end
-
-
 end
