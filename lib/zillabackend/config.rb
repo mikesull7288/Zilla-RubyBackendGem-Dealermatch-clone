@@ -2,8 +2,9 @@ module ZillaBackend
 	class Config
 		def self.initialize(data={})
      	 	@data = {}
-      		update!(data)
       		set_defaults
+      		update!(data)
+      		
 		end
 
 		def self.update!(data)
@@ -31,7 +32,7 @@ module ZillaBackend
 	       		self[sym]
 	     	end
 	    end
-	    
+
 	    def self.set_defaults
 	    	defaults = Hash.new
 			defaults[:show_all_products] = false
@@ -42,6 +43,13 @@ module ZillaBackend
 			defaults[:grouping_field_values] << "Add-On Product"
 
 			defaults[:cache_path] = "product_cache.txt"
+
+			defaults[:default_autopay] = true
+			defaults[:default_currency] = "USD"
+			defaults[:default_payment_term] = "Due Upon Reciept"
+			defaults[:batch] = "Batch1"
+
+			defaults[:make_sfdc_account] = false
 
 			update!(defaults)
 		end
