@@ -6,7 +6,7 @@ class CatalogTest < Test::Unit::TestCase
 
 	def test_get_rate_plan
 		actually = ZillaBackend::Catalog.get_rate_plan("4028e6963457a2a001345936b60d33fa")
-		assert_not_equal actually[0]["products"][0]["name"], nil
+		assert_not_equal actually["name"], nil
 	end
 
 	def test_load_from_cache
@@ -16,7 +16,7 @@ class CatalogTest < Test::Unit::TestCase
 
 	def test_refresh_catalog		
 		actually = ZillaBackend::Catalog.refresh_cache
-		assert_equal actually, nil
+		assert_not_equal actually[0]["name"], nil
 	end
 
 	#make sure the related models exist

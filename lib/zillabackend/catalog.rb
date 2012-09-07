@@ -1,12 +1,16 @@
 module ZillaBackend
+	#\brief The Catalog class manages and caches all Product data retrieved from the configured Zuora tenant
 	class Catalog
 		attr_accessor :last_sync
-
+		#
+	    #Reads the Product Catalog Data from Zuora and saves it to a JSON cache stored on the server to reduce load times. This method must be called each time the Product Catalog is changed in Zuora to ensure the catalog is not out of date for the user.
+	  	#@return A model containing all necessary information needed to display the products and rate plans in the product catalog
+	 	 #
 		def self.refresh_cache
-			
+			#initialize the zuora libraries		
 			Zuora.configure(username: Config.username, password: Config.pass, sandbox: Config.sandbox, logger: Config.logger)
 
-			#sort the products by category if the setting true
+			#for each classification 
 			field_groups = Array.new
 			num_groups = 0
 			if(Config.show_all_products)
@@ -17,20 +21,18 @@ module ZillaBackend
 				field_groups = Config.grouping_field_values
 			end
 			catalog_groups = Array.new
-
+			#make the catalog groups for sorting purposes
 			field_groups.each do |fg|
 				catalog_group = ZillaBackend::Models::CatalogGroup.new
 				catalog_group.name = fg
 				catalog_group.products = Array.new
-
-
+				#get all products
 				where_str = "EffectiveStartDate<'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' and EffectiveEndDate>'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"'"
 				if(!Config.show_all_products)
 					where = " AND " + Config.grouping_field + " = '" + fg + "'"
 					where_str += where
 				end
-				products = Zuora::Objects::Product.where(where_str)
-				
+				products = Zuora::Objects::Product.where(where_str)	
 				catalog_products = Array.new
 				#setup the catalog_product objects
 				products.each do |p|
@@ -81,15 +83,20 @@ module ZillaBackend
 		def self.write_to_cache(input)
 			File.open(Config.cache_path, 'w') {|f| f.write(input.to_json) }
 		end
-		#read the catalog from the cache
+		#
+		#Reads the Product Catalog Data from the locally saved JSON cache. If no cache exists, this will refresh the catalog from Zuora first.
+	 	#@return A model containing all necessary information needed to display the products and rate plans in the product catalog
+	 	#
 		def self.read_from_cache
 			json = File.read(Config.cache_path)
 			catalog_groups = JSON.parse(json)
 		end
-		#get a rate plan from the cache given a rate plan id
+		#
+	 	#Given a RatePlan ID, retrieves all rateplan information by searching through the cached catalog file
+	 	#@return RatePlan model
+	 	#
 		def self.get_rate_plan(id)
 			catalog_groups = read_from_cache
-			
 			catalog_groups.each do |cg|
 				cg["products"].each do |p|
 					p["rate_plans"].each do |rp|

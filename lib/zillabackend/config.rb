@@ -35,7 +35,7 @@ module ZillaBackend
 
 	    def self.set_defaults
 	    	defaults = Hash.new
-			defaults[:show_all_products] = false
+			defaults[:show_all_products] = true
 			defaults[:grouping_field] = "zillacloudcompany__c"
 			
 			defaults[:grouping_field_values] = Array.new
