@@ -13,9 +13,7 @@ class CatalogTest < Test::Unit::TestCase
 
 	def test_load_from_cache
 		actually = ZillaBackend::Catalog.read_from_cache
-		#assert_not_equal actually[0]["name"], nil
-		assert_not_equal actually[0]["products"], nil
-		
+		assert_not_equal actually[0]["products"], nil	
 	end
 
 	def test_refresh_catalog		

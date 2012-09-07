@@ -1,10 +1,12 @@
 module ZillaBackend
+	#
+	#Holds all the config in a hash and sets some default values
+	#
 	class Config
 		def self.initialize(data={})
      	 	@data = {}
       		set_defaults
-      		update!(data)
-      		
+      		update!(data)    		
 		end
 
 		def self.update!(data)

@@ -10,6 +10,7 @@ module ZillaBackend
 			#initialize the zuora libraries		
 			Zuora.configure(username: Config.username, password: Config.pass, sandbox: Config.sandbox, logger: Config.logger)
 
+			date = DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")
 			#for each classification 
 			field_groups = Array.new
 			num_groups = 0
@@ -27,7 +28,7 @@ module ZillaBackend
 				catalog_group.name = fg
 				catalog_group.products = Array.new
 				#get all products
-				where_str = "EffectiveStartDate<'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' and EffectiveEndDate>'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"'"
+				where_str = "EffectiveStartDate<'"+date+"' and EffectiveEndDate>'"+date+"'"
 				if(!Config.show_all_products)
 					where = " AND " + Config.grouping_field + " = '" + fg + "'"
 					where_str += where
@@ -41,7 +42,7 @@ module ZillaBackend
 					catalog_product.name = p.name
 					catalog_product.description = p.description ||= ""
 					#get rate plans for this product
-					rate_plan_where = "ProductId='" + catalog_product.id + "' and EffectiveStartDate<'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' and EffectiveEndDate>'"+DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")+"' "
+					rate_plan_where = "ProductId='" + catalog_product.id + "' and EffectiveStartDate<'"+date+"' and EffectiveEndDate>'"+date+"' "
 					rate_plans = Zuora::Objects::ProductRatePlan.where(rate_plan_where)
 					catalog_product.rate_plans = Array.new
 					rate_plans.each do |rp|
