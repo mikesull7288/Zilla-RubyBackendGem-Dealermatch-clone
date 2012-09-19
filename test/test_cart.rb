@@ -22,13 +22,14 @@ class CartTest < Test::Unit::TestCase
 		actually = ZillaBackend::Cart.new
 		actually.add_cart_item(rate_plan_id, 1)
 		del_res = actually.remove_cart_item(1)
-		assert_equal del_res, true
+
 		assert_equal actually.cart_items.count, 0
 		actually.add_cart_item(rate_plan_id, 1)
 		actually.add_cart_item(rate_plan_id, 1)
 		del_res = actually.remove_cart_item(2)
 		assert_equal actually.cart_items.count, 1
 		del_res = actually.remove_cart_item(2)
+		assert_equal actually.cart_items.count, 1
 	end
 
 	def test_new_cart
