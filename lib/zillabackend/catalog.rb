@@ -52,7 +52,7 @@ module ZillaBackend
 						catalog_rate_plan.product_name = p.name
 						catalog_rate_plan.description = p.description ||= ""
 						catalog_rate_plan.charges = Array.new
-						plan_uom = ""
+						catalog_rate_plan.plan_uom = ""
 						catalog_rate_plan.quantifiable = false
 						#get the charges for the rate plan
 						rate_plan_charges = Zuora::Objects::ProductRatePlanCharge.where(product_rate_plan_id: rp.id)
@@ -65,7 +65,7 @@ module ZillaBackend
 							catalog_charge.charge_type = rpc.charge_type
 							if(rpc.charge_type != "Usage" && (rpc.charge_model == "Per Unit Pricing" || rpc.charge_model == "Tiered Pricing" || rpc.charge_model == "Volume Pricing"))
 								catalog_charge.uom = rpc.uom
-								plan_uom = rpc.uom
+								catalog_rate_plan.plan_uom = rpc.uom
 								catalog_rate_plan.quantifiable = true
 							end
 							catalog_rate_plan.charges << catalog_charge
