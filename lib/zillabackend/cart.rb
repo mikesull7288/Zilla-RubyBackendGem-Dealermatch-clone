@@ -29,12 +29,11 @@ module ZillaBackend
 
 		def remove_cart_item(item_id)
 			for i in 0..self.cart_items.size
+				if(defined? self.cart_items[i])
 				if(self.cart_items[i].item_id == item_id)
 					self.cart_items.delete_at(i)
-					return true
 				end
 			end
-			false
 		end
 	end
 end
