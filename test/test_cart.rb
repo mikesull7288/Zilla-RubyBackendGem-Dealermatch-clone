@@ -8,6 +8,7 @@ class CartTest < Test::Unit::TestCase
 		rate_plan_id = cache[0]["products"][0]["rate_plans"][0]["id"]
 		actually = ZillaBackend::Cart.new
 		actually.add_cart_item(rate_plan_id, 1)
+		assert_not_equal actually.cart_items[0].rate_plan_id, nil
 		assert_equal actually.latest_item_id, 2
 		actually.add_cart_item(rate_plan_id, 2)
 		assert_not_equal actually.cart_items, nil

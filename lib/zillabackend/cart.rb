@@ -24,8 +24,8 @@ module ZillaBackend
 				new_cart_item.uom = plan.uom
 			end
 			
-			new_cart_item.rate_plan_name = defined? plan ? plan.name : 'Invalid Product'
-			new_cart_item.product_name = defined? plan ? plan.product_name : 'Invalid Product'				
+			new_cart_item.rate_plan_name = plan["name"] ||= 'Invalid Product'
+			new_cart_item.product_name = plan["product_name"] ||= 'Invalid Product'				
 			
 			cart_items << new_cart_item
 		end
