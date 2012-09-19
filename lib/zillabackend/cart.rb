@@ -28,14 +28,20 @@ module ZillaBackend
 		end
 
 		def remove_cart_item(item_id)
-			for i in 0..self.cart_items.size
-				if(defined? self.cart_items[i].item_id)
-					if(self.cart_items[i].item_id == item_id)
-						self.cart_items.delete_at(i)
-					end
-				end
+			index_to_delete = self.cart_items.index {|ci| ci.item_id == item_id}
+			
+			if(index_to_delete != nil)
+				self.cart_items.delete_at(index_to_delete)
 			end
-			self.cart_items
+			index_to_delete
+			# for i in 0..self.cart_items.size
+			# 	if(defined? self.cart_items[i].item_id)
+			# 		if(self.cart_items[i].item_id == item_id)
+			# 			self.cart_items.delete_at(i)
+			# 		end
+			# 	end
+			# end
+			# self.cart_items
 		end
 	end
 end
