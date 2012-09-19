@@ -20,10 +20,7 @@ module ZillaBackend
 
 			plan = ZillaBackend::Catalog.get_rate_plan(rate_plan_id)
 
-			if defined? plan.uom
-				new_cart_item.uom = plan.uom
-			end
-			
+			new_cart_item.uom = plan["uom"] ||= ''	
 			new_cart_item.rate_plan_name = plan["name"] ||= 'Invalid Product'
 			new_cart_item.product_name = plan["product_name"] ||= 'Invalid Product'				
 			
