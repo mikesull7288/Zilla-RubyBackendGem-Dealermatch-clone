@@ -24,16 +24,17 @@ module ZillaBackend
 			new_cart_item.rate_plan_name = plan["name"] ||= 'Invalid Product'
 			new_cart_item.product_name = plan["product_name"] ||= 'Invalid Product'				
 			
-			cart_items << new_cart_item
+			self.cart_items << new_cart_item
 		end
 
 		def remove_cart_item(item_id)
-			deleted = false;
-			cart_items.delete_if do |ci| 
-				ci.item_id = item_id 
-				deleted = true
+			for i in 0..self.cart_items.size
+				if(self.cart_items[i].item_id == item_id)
+					self.cart_items.delete_at(i)
+					return true
+				end
 			end
-			deleted
+			false
 		end
 	end
 end

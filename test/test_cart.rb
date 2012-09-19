@@ -12,15 +12,22 @@ class CartTest < Test::Unit::TestCase
 		assert_equal actually.latest_item_id, 2
 		actually.add_cart_item(rate_plan_id, 2)
 		assert_not_equal actually.cart_items, nil
+
+
 	end
 
 	def test_remove_cart_item
-		rate_plan_id = "4028e6963457a2a001345936b60d33fa"
+		cache = ZillaBackend::Catalog.read_from_cache
+		rate_plan_id = cache[0]["products"][0]["rate_plans"][0]["id"]
 		actually = ZillaBackend::Cart.new
 		actually.add_cart_item(rate_plan_id, 1)
 		del_res = actually.remove_cart_item(1)
 		assert_equal del_res, true
 		assert_equal actually.cart_items.count, 0
+		actually.add_cart_item(rate_plan_id, 1)
+		actually.add_cart_item(rate_plan_id, 1)
+		del_res = actually.remove_cart_item(2)
+		assert_equal actually.cart_items.count, 1
 	end
 
 	def test_new_cart
