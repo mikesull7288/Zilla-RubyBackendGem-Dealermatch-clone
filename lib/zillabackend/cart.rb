@@ -1,5 +1,42 @@
 module ZillaBackend
 	class Cart
+		attr_accessor :cart_items, :latest_item_id
 
+		def initialize
+			clear_cart
+		end
+
+		def clear_cart
+			self.cart_items = Array.new
+			self.latest_item_id = 1
+		end
+
+		def add_cart_item(rate_plan_id, quantity)
+			new_cart_item = ZillaBackend::Models::CartItem.new
+			new_cart_item.rate_plan_id = rate_plan_id
+			new_cart_item.quantity = quantity
+			new_cart_item.item_id = self.latest_item_id
+			self.latest_item_id += 1
+
+			plan = ZillaBackend::Catalog.get_rate_plan(rate_plan_id)
+
+			if defined? plan.uom
+				new_cart_item.uom = plan.uom
+			end
+			
+			new_cart_item.rate_plan_name = defined? plan ? plan.name : 'Invalid Product'
+			new_cart_item.product_name = defined? plan ? plan.product_name : 'Invalid Product'				
+			
+			cart_items << new_cart_item
+		end
+
+		def remove_cart_item(item_id)
+			deleted = false;
+			cart_items.delete_if do |ci| 
+				ci.item_id = item_id 
+				deleted = true
+			end
+			deleted
+		end
 	end
 end

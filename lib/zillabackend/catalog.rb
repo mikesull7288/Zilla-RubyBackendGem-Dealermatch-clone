@@ -89,8 +89,12 @@ module ZillaBackend
 	 	#@return A model containing all necessary information needed to display the products and rate plans in the product catalog
 	 	#
 		def self.read_from_cache
-			json = File.read(Config.cache_path)
-			catalog_groups = JSON.parse(json)
+			if File.exists?(Config.cache_path)
+				json = File.read(Config.cache_path)
+				catalog_groups = JSON.parse(json)
+			else
+				refresh_cache
+			end
 		end
 		#
 	 	#Given a RatePlan ID, retrieves all rateplan information by searching through the cached catalog file
