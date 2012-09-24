@@ -49,7 +49,9 @@ module ZillaBackend
 			defaults[:default_autopay] = true
 			defaults[:default_currency] = "USD"
 			defaults[:default_payment_term] = "Due Upon Reciept"
-			defaults[:batch] = "Batch1"
+			defaults[:default_batch] = "Batch1"
+			defaults[:deault_country] = "USA"
+			defaults[:default_state] = "CA"
 
 			defaults[:make_sfdc_account] = false
 			#TODO

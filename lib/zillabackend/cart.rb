@@ -18,8 +18,7 @@ module ZillaBackend
 			new_cart_item.item_id = self.latest_item_id
 			self.latest_item_id += 1
 
-			plan = ZillaBackend::Catalog.get_rate_plan(rate_plan_id)
-
+			plan = ZillaBackend::Catalog.get_rate_plan rate_plan_id
 			new_cart_item.uom = plan["uom"] ||= ''	
 			new_cart_item.rate_plan_name = plan["name"] ||= 'Invalid Product'
 			new_cart_item.product_name = plan["product_name"] ||= 'Invalid Product'				
@@ -28,10 +27,9 @@ module ZillaBackend
 		end
 
 		def remove_cart_item(item_id)
-			index_to_delete = self.cart_items.index {|ci| ci.item_id == item_id}
-			
+			index_to_delete = self.cart_items.index {|ci| ci.item_id == item_id}			
 			if(index_to_delete != nil)
-				self.cart_items.delete_at(index_to_delete)
+				self.cart_items.delete_at index_to_delete
 			end
 			self.cart_items
 		end
