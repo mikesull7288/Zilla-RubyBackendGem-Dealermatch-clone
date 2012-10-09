@@ -1,12 +1,12 @@
 GIT
   remote: git@github.com:zuorasc/zuora.git
-  revision: 5046e4c3e33868a3a4342fca2f57a265b3c38db1
+  revision: c0b5e7c7c4e8840a3dba8eb2f8f1e9a0ac274d00
   specs:
     zuora (0.0.1)
       activemodel (>= 3.0.0, < 4.0.0)
       activesupport (>= 3.0.0, < 4.0.0)
       libxml4r (~> 0.2.6)
-      savon (~> 0.9.8)
+      savon (>= 0.9.8, <= 1.1.0)
 
 PATH
   remote: .
@@ -16,36 +16,34 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    activemodel (3.2.8)
-      activesupport (= 3.2.8)
-      builder (~> 3.0.0)
-    activesupport (3.2.8)
-      i18n (~> 0.6)
-      multi_json (~> 1.0)
+    activemodel (3.0.17)
+      activesupport (= 3.0.17)
+      builder (~> 2.1.2)
+      i18n (~> 0.5.0)
+    activesupport (3.0.17)
     akami (1.2.0)
       gyoku (>= 0.4.0)
       nokogiri (>= 1.4.0)
-    builder (3.0.0)
+    builder (2.1.2)
     gyoku (0.4.6)
       builder (>= 2.1.2)
     httpi (1.1.1)
       rack
-    i18n (0.6.1)
+    i18n (0.5.0)
     libxml-ruby (2.3.3)
     libxml4r (0.2.6)
       libxml-ruby (>= 1.1.3)
-    multi_json (1.3.6)
     nokogiri (1.5.5)
     nori (1.1.3)
     rack (1.4.1)
-    savon (0.9.14)
-      akami (~> 1.1)
+    savon (1.1.0)
+      akami (~> 1.2.0)
       builder (>= 2.1.2)
-      gyoku (>= 0.4.0)
-      httpi (~> 1.0)
+      gyoku (~> 0.4.5)
+      httpi (~> 1.1.0)
       nokogiri (>= 1.4.0)
-      nori (~> 1.1)
-      wasabi (~> 2.2)
+      nori (~> 1.1.0)
+      wasabi (~> 2.5.0)
     wasabi (2.5.1)
       httpi (~> 1.0)
       nokogiri (>= 1.4.0)
@@ -54,6 +52,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  builder
+  builder (= 2.1.2)
   zillabackend!
   zuora!
