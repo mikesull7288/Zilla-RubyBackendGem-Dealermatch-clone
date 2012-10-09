@@ -11,7 +11,7 @@ class SubscriptionManagerTest < Test::Unit::TestCase
 		cart.add_cart_item(rate_plan_id, 1)
 		#preview the subscribe call
 		actually = ZillaBackend::SubscriptionManager.preview_cart(cart)
-		assert_equal actually[:success], true
+		assert_equal actually.success, true
 	end
 
 	def test_preview_empty_or_nil_cart

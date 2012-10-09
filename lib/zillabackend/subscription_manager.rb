@@ -62,9 +62,16 @@ module ZillaBackend
 			#sub_request.payment_method = nil
 			sub_request.product_rate_plans = prod_rate_plans
 
-			return sub_request.create
+			sub_res = sub_request.create
+			if sub_res[:success] == true
+				sub_preview.invoice_amount = sub_res[:invoice_data][:invoice][:amount]
+				sub_preview.success = true
+			else
+				sub_preview.success = false
+				sub_preview.error = sub_res[:errors][:message]
+			end
 
-			#sub_preview
+			sub_preview
 		end
 	end
 end
