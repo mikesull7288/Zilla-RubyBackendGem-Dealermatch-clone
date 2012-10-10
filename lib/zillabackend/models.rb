@@ -6,6 +6,7 @@ module ZillaBackend
 		autoload :CatalogCharge, 'zillabackend/models/catalog_charge'
 		autoload :CartCharge, 'zillabackend/models/cart_charge'
 		autoload :CartItem, 'zillabackend/models/cart_item'	
-		autoload :SubscribePreview, 'zillabackend/models/subscribe_preview'		
+		autoload :SubscribePreview, 'zillabackend/models/subscribe_preview'
+		autoload :SummaryContact, 'zillabackend/models/summary_contact'		
 	end
 end
