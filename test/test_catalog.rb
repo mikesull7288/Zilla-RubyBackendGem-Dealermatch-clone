@@ -9,6 +9,7 @@ class CatalogTest < Test::Unit::TestCase
 		rate_plan_id = cache[0]["products"][0]["rate_plans"][0]["id"]
 		actually = ZillaBackend::Catalog.get_rate_plan(rate_plan_id)
 		assert_not_equal actually["name"], nil
+		assert_not_equal actually["charges"], nil
 	end
 
 	def test_load_from_cache

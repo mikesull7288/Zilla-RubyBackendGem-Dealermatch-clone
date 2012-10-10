@@ -8,7 +8,8 @@ class SubscriptionManagerTest < Test::Unit::TestCase
 		cache = ZillaBackend::Catalog.read_from_cache
 		rate_plan_id = cache[0]["products"][0]["rate_plans"][0]["id"]
 		cart = ZillaBackend::Cart.new
-		cart.add_cart_item(rate_plan_id, 1)
+		cart.add_cart_item(rate_plan_id, 2)
+
 		#preview the subscribe call
 		actually = ZillaBackend::SubscriptionManager.preview_cart(cart)
 		assert_equal actually.success, true
