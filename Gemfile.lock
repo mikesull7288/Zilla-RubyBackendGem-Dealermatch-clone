@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:zuorasc/zuora.git
+  remote: https://github.com/zuorasc/zuora.git
   revision: 21bc7574f5f3b7fb6abdb24ba8e97fd45581927b
   specs:
     zuora (0.0.1)
