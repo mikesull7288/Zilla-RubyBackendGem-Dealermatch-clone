@@ -39,17 +39,24 @@ module ZillaBackend
 			sub.contract_acceptance_date = today
 			sub.term_start_date = today
 			sub.term_type = "EVERGREEN"
-			prod_rate_plans = Array.new
-
+			pandc = Array.new
 			#make a product rate plan for each cart item
 			cart.cart_items.each do |item|
+				charge_list = Array.new
 				prp = Zuora::Objects::ProductRatePlan.new
 				prp.id = item.rate_plan_id
-				prod_rate_plans << prp
+				#make a rate plan charge for each charge in the cart item charge
+				if item.quantity != nil && item.quantity != 1
+					charges = ZillaBackend::Catalog.get_rate_plan item.id
+					charges.each do |charge|
+						prpc = Zuora::Objects::RatePlanCharge.new
+						prpc.id = charge.id
+						prpc.quantity = charge.quantity
+						charge_list << prpc
+					end
+				end
+				pandc << {rate_plan: prp, charges: charge_list}
 			end
-
-			#TODO
-			#set the quantity on the charges if necessary
 
 			#preview options
 			sub_request.preview_options = {:enable_preview_mode => true, :number_of_periods => 1}
@@ -60,7 +67,7 @@ module ZillaBackend
 			sub_request.bill_to_contact = con
 			sub_request.subscription = sub
 			#sub_request.payment_method = nil
-			sub_request.product_rate_plans = prod_rate_plans
+			sub_request.plans_and_charges = pandc
 
 			sub_res = sub_request.create
 			if sub_res[:success] == true
