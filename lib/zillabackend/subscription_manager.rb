@@ -47,7 +47,7 @@ module ZillaBackend
 				prp.id = item.rate_plan_id
 				#make a rate plan charge for each charge in the cart item charge
 				if item.quantity != nil && item.quantity != 1
-					charges = ZillaBackend::Catalog.get_rate_plan item.id
+					charges = ZillaBackend::Catalog.get_rate_plan item.rate_plan_id
 					charges.each do |charge|
 						prpc = Zuora::Objects::RatePlanCharge.new
 						prpc.id = charge.id
