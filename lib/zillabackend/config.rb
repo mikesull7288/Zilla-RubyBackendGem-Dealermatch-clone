@@ -54,8 +54,12 @@ module ZillaBackend
 			defaults[:default_state] = "CA"
 
 			defaults[:make_sfdc_account] = false
-			#TODO
-			#ADD HPM INFORMATION
+
+			#HPM Info
+			defaults[:page_id] = '2c92c0f93a3055aa013a438f86cb5bcd'
+			defaults[:tenant_id] = 10717
+			defaults[:api_security_key] = 'Y46yy3LMIBRIeqwzk_u4-4YvBGU_HHs79PCHcoihq90='
+			defaults[:app_url] = 'https://apisandbox.zuora.com'
 
 			update!(defaults)
 		end

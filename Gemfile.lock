@@ -44,6 +44,8 @@ GEM
       nokogiri (>= 1.4.0)
       nori (~> 1.1.0)
       wasabi (~> 2.5.0)
+    tzinfo (0.3.33)
+    uuidtools (2.1.2)
     wasabi (2.5.1)
       httpi (~> 1.0)
       nokogiri (>= 1.4.0)
@@ -53,5 +55,7 @@ PLATFORMS
 
 DEPENDENCIES
   builder (= 2.1.2)
+  tzinfo
+  uuidtools
   zillabackend!
   zuora!
