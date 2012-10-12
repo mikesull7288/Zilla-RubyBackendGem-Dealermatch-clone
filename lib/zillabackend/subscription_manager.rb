@@ -89,7 +89,9 @@ module ZillaBackend
 					rate_plan["charges"].each do |charge|
 						prpc = Zuora::Objects::RatePlanCharge.new
 						prpc.product_rate_plan_charge_id = charge["id"]
-						prpc.quantity = item.quantity
+						if prpc.charge_model != 'Usage'
+							prpc.quantity = item.quantity
+						end
 						charge_list << prpc
 					end
 				end

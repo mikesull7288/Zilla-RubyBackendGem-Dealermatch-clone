@@ -37,31 +37,31 @@ module ZillaBackend
 
 	    def self.set_defaults
 	    	defaults = Hash.new
-			defaults[:show_all_products] = true
-			defaults[:grouping_field] = "zillacloudcompany__c"
-			
-			defaults[:grouping_field_values] = Array.new
-			defaults[:grouping_field_values] << "Base Product"
-			defaults[:grouping_field_values] << "Add-On Product"
+				defaults[:show_all_products] = true
+				defaults[:grouping_field] = "zillacloudcompany__c"
+				
+				defaults[:grouping_field_values] = Array.new
+				defaults[:grouping_field_values] << "Base Product"
+				defaults[:grouping_field_values] << "Add-On Product"
 
-			defaults[:cache_path] = "product_cache.txt"
+				defaults[:cache_path] = "product_cache.txt"
 
-			defaults[:default_autopay] = true
-			defaults[:default_currency] = "USD"
-			defaults[:default_payment_term] = "Due Upon Receipt"
-			defaults[:default_batch] = "Batch1"
-			defaults[:default_country] = "USA"
-			defaults[:default_state] = "CA"
+				defaults[:default_autopay] = true
+				defaults[:default_currency] = "USD"
+				defaults[:default_payment_term] = "Due Upon Receipt"
+				defaults[:default_batch] = "Batch1"
+				defaults[:default_country] = "USA"
+				defaults[:default_state] = "CA"
 
-			defaults[:make_sfdc_account] = false
+				defaults[:make_sfdc_account] = false
 
-			#HPM Info
-			defaults[:page_id] = '2c92c0f93a3055aa013a438f86cb5bcd'
-			defaults[:tenant_id] = 10717
-			defaults[:api_security_key] = 'Y46yy3LMIBRIeqwzk_u4-4YvBGU_HHs79PCHcoihq90='
-			defaults[:app_url] = 'https://apisandbox.zuora.com'
+				#HPM Info
+				defaults[:page_id] = '2c92c0f93a3055aa013a438f86cb5bcd'
+				defaults[:tenant_id] = 10717
+				defaults[:api_security_key] = 'Y46yy3LMIBRIeqwzk_u4-4YvBGU_HHs79PCHcoihq90='
+				defaults[:app_url] = 'https://apisandbox.zuora.com'
 
-			update!(defaults)
+				update!(defaults)
 		end
 	end
 end
