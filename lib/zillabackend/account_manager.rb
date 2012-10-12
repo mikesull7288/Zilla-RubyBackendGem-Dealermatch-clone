@@ -4,7 +4,7 @@ module ZillaBackend
 	
 		def self.check_email_availability(target_email)
 			qRes = Zuora::Objects::Contact.where(work_email: target_email)
-			qRes.count == 0 ? false : true
+			qRes.count == 0 ? true : false
 		end
 
 		def self.get_contact_detail(account_name)

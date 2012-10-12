@@ -3,6 +3,37 @@ require 'helper'
 class SubscriptionManagerTest < Test::Unit::TestCase
 	include ZillaBackendTestHelper
 	
+	def test_bad_subscribe_inputs_should_return_different_errors
+		#add a cart item
+		cache = ZillaBackend::Catalog.read_from_cache
+		rate_plan_id = cache[0]["products"][0]["rate_plans"][0]["id"]
+		cart = ZillaBackend::Cart.new
+		cart.add_cart_item(rate_plan_id, 2)
+
+		actually = ZillaBackend::SubscriptionManager.subscribe_with_current_cart(nil, nil, nil)
+		assert_equal actually, "CART_NOT_INITIALIZED"
+		
+		actually = ZillaBackend::SubscriptionManager.subscribe_with_current_cart(nil,  nil, cart)
+		assert_equal actually, "USER_EMAIL_NOT_PROVIDED"
+
+		actually = ZillaBackend::SubscriptionManager.subscribe_with_current_cart("123@123.com", nil , cart)
+		assert_equal actually, "INVALID_PMID"
+	end
+
+	def test_subscribe_non_empty_cart
+		#valid payment id from hpm
+		hpm_payment_id = '2c92c0f83a49193b013a530046103d5a'
+		#add a cart item
+		cache = ZillaBackend::Catalog.read_from_cache
+		rate_plan_id = cache[0]["products"][0]["rate_plans"][0]["id"]
+		cart = ZillaBackend::Cart.new
+		cart.add_cart_item(rate_plan_id, 2)
+
+		actually = ZillaBackend::SubscriptionManager.subscribe_with_current_cart("12345@123.com", hpm_payment_id, cart)
+		
+		assert_equal actually[:success] == nil ? actually : actually[:success], true
+	end
+
 	def test_preview_non_empty_cart
 		#add a cart item
 		cache = ZillaBackend::Catalog.read_from_cache

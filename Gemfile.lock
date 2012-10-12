@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/zuorasc/zuora.git
-  revision: 21bc7574f5f3b7fb6abdb24ba8e97fd45581927b
+  revision: ef5410a3a1e57dc902718598e2b49b1f82686289
   specs:
     zuora (0.0.1)
       activemodel (>= 3.0.0, < 4.0.0)
@@ -45,7 +45,7 @@ GEM
       nori (~> 1.1.0)
       wasabi (~> 2.5.0)
     tzinfo (0.3.33)
-    uuidtools (2.1.2)
+    uuidtools (2.1.3)
     wasabi (2.5.1)
       httpi (~> 1.0)
       nokogiri (>= 1.4.0)

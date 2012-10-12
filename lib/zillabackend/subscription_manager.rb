@@ -1,7 +1,117 @@
 module ZillaBackend
 	class SubscriptionManager
+
 		Zuora.configure(username: Config.username, password: Config.pass, sandbox: Config.sandbox, logger: Config.logger)
 	
+		def self.subscribe_with_current_cart(user_email, pm_id, cart)
+
+			if(cart == nil || cart.cart_items == nil)
+				return 'CART_NOT_INITIALIZED'
+			end
+
+			if(user_email == nil)
+				return 'USER_EMAIL_NOT_PROVIDED'
+			end
+
+			if(!ZillaBackend::AccountManager.check_email_availability(user_email))
+				return 'DUPLICATE_EMAIL'
+			end
+
+			#Get Contact information from newly created payment method
+			pm_result = Zuora::Objects::PaymentMethod.find(pm_id)
+
+			if( pm_result == nil)
+				return 'INVALID_PMID'
+			end
+
+			
+			holder_name = pm_result.credit_card_holder_name ||= ''
+
+			#Derive first and last name from CardHolderName
+			split_str = holder_name.split(' ')
+			first_name = split_str[0] ||= ''
+			last_name = split_str[1] ||= ''
+
+			address1 = pm_result.credit_card_address1 ||= ''
+			address2 = pm_result.credit_card_address2 ||= ''
+			city = pm_result.credit_card_city ||= ''
+			country = pm_result.credit_card_country ||= ''
+			postal_code = pm_result.credit_card_postal_code ||= ''
+			state = pm_result.credit_card_state ||= ''
+			phone = pm_result.phone ||= ''
+
+			today = DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")
+			#setup the account
+			acc = Zuora::Objects::Account.new
+			acc.currency = Config.default_currency
+			acc.name = user_email
+			acc.payment_term = Config.default_payment_term
+			acc.batch = Config.default_batch
+			acc.bill_cycle_day = 0
+			acc.status = "Active"
+			acc.bcd_setting_option = 'AutoSet'
+			#set the payment method id
+			pay = Zuora::Objects::PaymentMethod.new
+			pay.id = pm_id
+			#set up the contact
+			con = Zuora::Objects::Contact.new
+			con.country = country
+			con.state = state
+			con.first_name = first_name
+			con.last_name  = last_name
+			con.address1 = address1
+			con.address2 = address2
+			con.city = city
+			con.country = country
+			con.postal_code = postal_code
+			con.state = state
+			con.work_email = user_email
+			con.work_phone = phone
+
+			#Set up subscription
+			subscription = Zuora::Objects::Subscription.new
+			subscription.contract_effective_date = today
+			subscription.service_activation_date = today
+			subscription.contract_acceptance_date = today
+			subscription.term_start_date = today
+			subscription.term_type = "EVERGREEN"
+			subscription.status = "Active"
+
+			pandc = Array.new
+			#make a product rate plan for each cart item
+			cart.cart_items.each do |item|
+				charge_list = Array.new
+				prp = Zuora::Objects::ProductRatePlan.new
+				prp.id = item.rate_plan_id
+				#make a rate plan charge for each charge in the cart item charge
+				if item.quantity != nil && item.quantity != 1
+					rate_plan = ZillaBackend::Catalog.get_rate_plan item.rate_plan_id
+					rate_plan["charges"].each do |charge|
+						prpc = Zuora::Objects::RatePlanCharge.new
+						prpc.product_rate_plan_charge_id = charge["id"]
+						prpc.quantity = item.quantity
+						charge_list << prpc
+					end
+				end
+				pandc << {rate_plan: prp, charges: charge_list}
+			end
+			#setup the SubscribeRequest
+			sub_request = Zuora::Objects::SubscribeRequest.new
+			#preview options
+			sub_request.preview_options = {:enable_preview_mode => false, :number_of_periods => 1}
+			#susbcribe options
+			sub_request.subscribe_options = {:generate_invoice => true, :process_payments => true}
+			
+			sub_request.account = acc
+			sub_request.bill_to_contact = con
+			sub_request.subscription = subscription
+			sub_request.payment_method = pay
+			sub_request.plans_and_charges = pandc
+			
+			sub_res = sub_request.create
+			
+		end
+
 		def self.preview_cart(cart)
 			sub_preview = ZillaBackend::Models::SubscribePreview.new
 
