@@ -16,7 +16,7 @@ module ZillaBackend
       signature = calc_signature(PAGE_ID, TENANT_ID, timestamp, token)
 
       query_string = "id=#{PAGE_ID}&tenantId=#{TENANT_ID}&timestamp=#{timestamp}&token=#{token}"
-      @iframeurl = "#{APP_URL}/apps/PublicHostedPaymentMethodPage.do?method=requestPage&#{query_string}&signature=#{signature}"
+      @iframeurl = "#{APP_URL}/apps/PublicHostedPaymentMethodPage.do?method=requestPage&#{query_string}&signature=#{signature}&retainValues=true"
   	end
 
   	private
