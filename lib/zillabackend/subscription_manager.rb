@@ -3,6 +3,114 @@ module ZillaBackend
 
 		Zuora.configure(username: Config.username, password: Config.pass, sandbox: Config.sandbox, logger: Config.logger)
 	
+		def self.get_current_subscription(account_name)
+			today = DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")
+			active_sub = ZillaBackend::Models::AmenderSubscription.new
+
+			acc_query_res = Zuora::Objects::Account.where(name: account_name)
+			if acc_query_res[0] == nil 
+				return 'ACCOUNT_DOES_NOT_EXIST'
+			end
+			
+			account_id = acc_query_res[0].id ||= nil
+			sub_query_res = Zuora::Objects::Subscription.where(account_id: account_id, status: 'Active')
+
+			if sub_query_res[0] == nil 
+				return 'SUBSCRIPTION_DOES_NOT_EXIST'
+			end
+
+			active_sub.user_email = account_name
+			active_sub.end_of_term_date = today
+
+			active_sub.sub_id = sub_query_res[0].id
+			active_sub.version = sub_query_res[0].version
+			active_sub.start_date = sub_query_res[0].term_start_date
+			#get active rate plans
+			rate_plans = Zuora::Objects::RatePlan.where(subscription_id: active_sub.sub_id)
+			new_plans = Array.new
+			rate_plans.each do |rp|
+				new_plan = ZillaBackend::Models::AmenderPlan.new
+				new_plan.id = rp.id
+				new_plan.name = rp.name
+				#get product rate plan description
+				product_rate_plans = Zuora::Objects::ProductRatePlan.where(id: rp.product_rate_plan_id)
+				new_plan.description = product_rate_plans[0].description ||= ''
+				#get product name
+				products = Zuora::Objects::Product.where(id: product_rate_plans[0].product_id)
+				new_plan.name = products[0].name				
+				#get all charges
+				rpcs = Zuora::Objects::RatePlanCharge.where(rate_plan_id: rp.id)
+				rpcs.each do |rpc|
+					new_charge = ZillaBackend::Models::AmenderCharge.new
+					new_charge.id = rpc.id
+					new_charge.name = rpc.name
+					new_charge.charge_model = rpc.charge_model
+					new_charge.product_rate_plan_charge_id = rpc.product_rate_plan_charge_id
+					
+					if rpc.charge_model != 'Flat Fee Pricing' || rpc.charge_type = 'Usage'
+						new_plan.uom = rpc.uom
+						new_plan.quantity = rpc.quantity
+						new_charge.uom = rpc.uom
+						new_charge.quantity = rpc.uom
+					end
+					
+					if rpc.charged_through_date > active_sub.end_of_term_date
+						active_sub.end_of_term_date = rpc.charged_through_date
+					end unless rpc.charged_through_date == nil
+
+					new_plan.amender_charges << new_charge
+				end
+				active_sub.active_plans << new_plan
+			end
+			#get removed rate plans
+			rmvd_rps = Zuora::Objects::RatePlan.where(subscription_id: active_sub.sub_id, amendment_type: 'RemoveProduct')
+			rmvd_rps.each do |rp|
+				new_plan = ZillaBackend::Models::AmenderPlan.new
+				new_plan.id = rp.id
+				new_plan.name = rp.name
+				#get product rate plan description
+				product_rate_plans = Zuora::Objects::ProductRatePlan.where(id: rp.product_rate_plan_id)
+				new_plan.description = product_rate_plans[0].description ||= ''
+				#get product name
+				products = Zuora::Objects::Product.where(id: product_rate_plans[0].product_id)
+				new_plan.name = products[0].name
+
+				new_plan.amendment_id = rp.amendment_id
+				new_plan.amendment_type = rp.amendment_type
+
+				#query amendment for this rate plan to get effective removal date
+				amnd_res = Zuora::Objects::Amendment.where(id: new_plan.amendment_id)
+				new_plan.effective_date = amnd_res[0].contract_effective_date
+
+				#get all charges
+				rpcs = Zuora::Objects::RatePlanCharge.where(rate_plan_id: rp.id)
+				rpcs.each do |rpc|
+					new_charge = ZillaBackend::Models::AmenderCharge.new
+					new_charge.id = rpc.id
+					new_charge.name = rpc.name
+					new_charge.charge_model = rpc.charge_model
+					new_charge.product_rate_plan_charge_id = rpc.product_rate_plan_charge_id
+					
+					if rpc.charge_model != 'Flat Fee Pricing' || rpc.charge_type = 'Usage'
+						new_plan.uom = rpc.uom
+						new_plan.quantity = rpc.quantity
+						new_charge.uom = rpc.uom
+						new_charge.quantity = rpc.uom
+					end
+					
+					if rpc.charged_through_date > active_sub.end_of_term_date
+						active_sub.end_of_term_date = rpc.charged_through_date
+					end unless rpc.charged_through_date == nil
+
+					new_plan.amender_charges << new_charge
+				end
+				active_sub.removed_plans << new_plan
+			end
+
+			active_sub
+		end
+
+
 		def self.subscribe_with_current_cart(user_email, pm_id, cart)
 
 			if(cart == nil || cart.cart_items == nil)

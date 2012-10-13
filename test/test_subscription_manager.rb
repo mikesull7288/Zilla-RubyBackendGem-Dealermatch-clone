@@ -3,6 +3,11 @@ require 'helper'
 class SubscriptionManagerTest < Test::Unit::TestCase
 	include ZillaBackendTestHelper
 	
+	def test_get_current_subscription
+		actually = ZillaBackend::SubscriptionManager.get_current_subscription("123")
+		assert_not_equal actually, nil
+	end
+
 	def test_bad_subscribe_inputs_should_return_different_errors
 		#add a cart item
 		cache = ZillaBackend::Catalog.read_from_cache
@@ -53,6 +58,21 @@ class SubscriptionManagerTest < Test::Unit::TestCase
 
 	def test_subscribe_preview_model
 		actually = ZillaBackend::Models::SubscribePreview.new
+		assert_not_equal actually, nil
+	end
+
+	def test_amender_subscription_model
+		actually = ZillaBackend::Models::AmenderSubscription.new
+		assert_not_equal actually, nil
+	end
+
+	def test_amender_plan_model
+		actually = ZillaBackend::Models::AmenderPlan.new
+		assert_not_equal actually, nil
+	end
+
+	def test_amender_charge_model
+		actually = ZillaBackend::Models::AmenderCharge.new
 		assert_not_equal actually, nil
 	end
 end
