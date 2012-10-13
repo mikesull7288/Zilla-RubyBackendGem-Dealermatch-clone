@@ -4,7 +4,7 @@ class AccountManagerTest < Test::Unit::TestCase
 	include ZillaBackendTestHelper
 	
 	def test_can_we_check_email_availability
-		actually = ZillaBackend::AccountManager.check_email_availability("test@test.com")
+		actually = ZillaBackend::AccountManager.check_email_availability("123")
 		assert_equal actually, false
 	end
 
