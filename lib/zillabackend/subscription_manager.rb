@@ -73,7 +73,7 @@ module ZillaBackend
 				new_plan.description = product_rate_plans[0].description ||= ''
 				#get product name
 				products = Zuora::Objects::Product.where(id: product_rate_plans[0].product_id)
-				new_plan.name = products[0].name
+				new_plan.product_name = products[0].name
 
 				new_plan.amendment_id = rp.amendment_id
 				new_plan.amendment_type = rp.amendment_type
