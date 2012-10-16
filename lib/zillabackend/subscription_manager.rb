@@ -37,7 +37,7 @@ module ZillaBackend
 				new_plan.description = product_rate_plans[0].description ||= ''
 				#get product name
 				products = Zuora::Objects::Product.where(id: product_rate_plans[0].product_id)
-				new_plan.name = products[0].name				
+				new_plan.product_name = products[0].name				
 				#get all charges
 				rpcs = Zuora::Objects::RatePlanCharge.where(rate_plan_id: rp.id)
 				rpcs.each do |rpc|
@@ -47,7 +47,7 @@ module ZillaBackend
 					new_charge.charge_model = rpc.charge_model
 					new_charge.product_rate_plan_charge_id = rpc.product_rate_plan_charge_id
 					
-					if rpc.charge_model != 'Flat Fee Pricing' || rpc.charge_type = 'Usage'
+					if rpc.charge_model != 'Flat Fee Pricing' && rpc.charge_type != 'Usage'
 						new_plan.uom = rpc.uom
 						new_plan.quantity = rpc.quantity
 						new_charge.uom = rpc.uom
@@ -91,7 +91,7 @@ module ZillaBackend
 					new_charge.charge_model = rpc.charge_model
 					new_charge.product_rate_plan_charge_id = rpc.product_rate_plan_charge_id
 					
-					if rpc.charge_model != 'Flat Fee Pricing' || rpc.charge_type = 'Usage'
+					if rpc.charge_model != 'Flat Fee Pricing' && rpc.charge_type != 'Usage'
 						new_plan.uom = rpc.uom
 						new_plan.quantity = rpc.quantity
 						new_charge.uom = rpc.uom
