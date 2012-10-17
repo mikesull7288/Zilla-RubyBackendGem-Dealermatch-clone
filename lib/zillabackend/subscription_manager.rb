@@ -110,7 +110,6 @@ module ZillaBackend
 			active_sub
 		end
 
-
 		def self.subscribe_with_current_cart(user_email, pm_id, cart)
 
 			if(cart == nil || cart.cart_items == nil)
@@ -131,8 +130,7 @@ module ZillaBackend
 			if( pm_result == nil)
 				return 'INVALID_PMID'
 			end
-
-			
+	
 			holder_name = pm_result.credit_card_holder_name ||= ''
 
 			#Derive first and last name from CardHolderName

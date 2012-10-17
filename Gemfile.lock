@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/zuorasc/zuora.git
-  revision: ef5410a3a1e57dc902718598e2b49b1f82686289
+  revision: 4be0b89b00efae539aaec1be143f50bc63b007aa
   specs:
     zuora (0.0.1)
       activemodel (>= 3.0.0, < 4.0.0)

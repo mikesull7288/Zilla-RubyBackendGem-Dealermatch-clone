@@ -9,4 +9,5 @@ module ZillaBackend
 	autoload :SubscriptionManager, 'zillabackend/subscription_manager'
 	autoload :AccountManager, 'zillabackend/account_manager'
 	autoload :PaymentManager, 'zillabackend/payment_manager'
+	autoload :Amender, 'zillabackend/amender'
 end
