@@ -5,7 +5,7 @@ class AccountManagerTest < Test::Unit::TestCase
 	
 	def test_can_we_check_email_availability
 		actually = ZillaBackend::AccountManager.check_email_availability("test@test.com")
-		assert_equal actually, false
+		assert_equal actually, true
 	end
 
 	def test_can_we_get_contact_detail
@@ -16,5 +16,10 @@ class AccountManagerTest < Test::Unit::TestCase
 	def test_can_we_make_a_summary_contact
 		actually = ZillaBackend::Models::SummaryContact.new
 		assert_not_equal actually, nil
+	end
+
+	def test_can_we_make_a_summary_account
+		actually = ZillaBackend::Models::SummaryAccount.new
+		assert_not_equal actually,nil
 	end
 end

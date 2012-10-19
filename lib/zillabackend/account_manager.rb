@@ -41,5 +41,59 @@ module ZillaBackend
 			end
 			con_detail
 		end
+
+		def self.get_account_detail(account_name)
+			account_detail = ZillaBackend::Models::SummaryAccount.new
+
+			account_id = ''
+			q_res = Zuora::Objects::Account.where(name: account_name)
+			q_res.each do |acc|
+				account_id = acc.id
+			end
+
+			if account_id == ''
+				account_detail.success = false
+				account_detail.error = 'USER_DOESNT_EXIST'
+				return account_detail
+			end
+
+			q_res.each do |acc|
+				account_detail.name = acc.name
+				account_detail.balance = acc.balance
+				account_detail.last_Invoice_Date = acc.lastInvoiceDate == nil ? acc.lastInvoiceDate : nil
+
+				payment_res = Zuora::Objects::Payment.where(account_id: account_id)
+				if payment_res.count == 0
+					account_detail.lastInvoiceDate = nil
+					account_detail.lastInvoiceAmount = nil
+				else
+					account_detail.lastInvoiceDate = 0
+					account_detail.lastInvoiceAmount = 0
+				end
+
+				
+			end
+
+			account_detail.success = true
+			return account_detail
+
+		end
+
+		private
+			def self.cmp_payments(a, b)
+				if a.createdDate.eql? b.createdDate
+					return 0
+				else
+					return a.createdDate > b.createdDate ? -1 : 1
+				end	
+			end
+
+			def self.cmp_invoices(a, b)
+				if a.createdDate == b.createdDate
+					return 0
+				else
+					return a.createdDate > b.createdDate ? -1 : 1
+				end
+			end
   end
 end	
