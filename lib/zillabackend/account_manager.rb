@@ -60,15 +60,16 @@ module ZillaBackend
 			q_res.each do |acc|
 				account_detail.name = acc.name
 				account_detail.balance = acc.balance
-				account_detail.last_Invoice_Date = acc.lastInvoiceDate == nil ? acc.lastInvoiceDate : nil
+				account_detail.last_Invoice_Date = acc.last_invoice_date == nil ? acc.last_invoice_date : nil
 
 				payment_res = Zuora::Objects::Payment.where(account_id: account_id)
 				if payment_res.count == 0
-					account_detail.lastInvoiceDate = nil
-					account_detail.lastInvoiceAmount = nil
+					account_detail.last_invoice_date = nil
+					account_detail.last_invoice_amount = nil
 				else
-					account_detail.lastInvoiceDate = 0
-					account_detail.lastInvoiceAmount = 0
+					#is this the right way to get info out of payment_res?
+					account_detail.last_invoice_date = payment_res[0].effective_date
+					account_detail.last_invoice_amount = payment_res[0].amount
 				end
 
 				
@@ -79,12 +80,33 @@ module ZillaBackend
 
 		end
 
+		def self.getPaymentMethodDetail(account_name)
+			account_detail = ZillaBackend::Models::SummaryAccount.new
+
+			account_id = ''
+			q_res = Zuora::Objects::Account.where(account_name: account_name)
+			q_res.each do |acc|
+				account_id = acc.id
+			end
+
+			if account_id == ''
+				account_detail.success = false;
+				account_detail.error = 'USER_DOESNT_EXIST'
+				return account_detail
+			end
+
+			default_pm_id
+			
+
+
+		end
+
 		private
 			def self.cmp_payments(a, b)
-				if a.createdDate.eql? b.createdDate
+				if a.created_date.eql? b.created_date
 					return 0
 				else
-					return a.createdDate > b.createdDate ? -1 : 1
+					return a.created_date > b.created_date ? -1 : 1
 				end	
 			end
 
