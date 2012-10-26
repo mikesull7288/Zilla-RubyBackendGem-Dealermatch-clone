@@ -59,8 +59,8 @@ module ZillaBackend
 
 			amend_request.amendment = amendment
 			amend_request.preview_options = { enable_preview_mode: preview, number_of_periods: 1 }
-			amend_request.amend_options = { generate_invoice: true, process_payments: true }
-			amend_request.plans_and_charges = Array.new << { rate_plan: product_rate_plan, charges: nil }
+			amend_request.amend_options = { generate_invoice: !preview ? true : false, process_payments: !preview ? true : false }
+
 			amend_request.create
 		end
 

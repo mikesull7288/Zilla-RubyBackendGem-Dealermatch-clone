@@ -30,7 +30,7 @@ class SubscriptionManagerTest < Test::Unit::TestCase
 		hpm_payment_id = '2c92c0f83a49193b013a530046103d5a'
 		#add a cart item
 		cache = ZillaBackend::Catalog.read_from_cache
-		rate_plan_id = cache[0]["products"][0]["rate_plans"][0]["id"]
+		rate_plan_id = cache[0]["products"][1]["rate_plans"][0]["id"]
 		cart = ZillaBackend::Cart.new
 		cart.add_cart_item(rate_plan_id, 2)
 
@@ -42,7 +42,7 @@ class SubscriptionManagerTest < Test::Unit::TestCase
 	def test_preview_non_empty_cart
 		#add a cart item
 		cache = ZillaBackend::Catalog.read_from_cache
-		rate_plan_id = cache[0]["products"][0]["rate_plans"][0]["id"]
+		rate_plan_id = cache[0]["products"][1]["rate_plans"][0]["id"]
 		cart = ZillaBackend::Cart.new
 		cart.add_cart_item(rate_plan_id, 2)
 
