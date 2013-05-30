@@ -14,7 +14,7 @@ PATH
     zillabackend (0.0.0)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     activemodel (3.0.17)
       activesupport (= 3.0.17)

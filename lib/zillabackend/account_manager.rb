@@ -41,5 +41,9 @@ module ZillaBackend
 			end
 			con_detail
 		end
+
+		def self.get_account_detail
+
+		end
   end
 end	

@@ -3,8 +3,11 @@ require 'zillabackend'
 require 'bundler/setup'
 
 module ZillaBackendTestHelper
-	ZillaBackend::Config.initialize(username: "smogger914@yahoo.com", pass: "Fo!d3168", sandbox: true, logger: true)
-	Zuora.configure(username: "smogger914@yahoo.com", password: "Fo!d3168", sandbox: true, logger: true)
+
+	def login
+		ZillaBackend::Config.initialize(username: "smogger914@yahoo.com", pass: "Zuora002", sandbox: true, logger: true)
+		Zuora.configure(username: "smogger914@yahoo.com", password: "Zuora002", sandbox: true, logger: true)
+	end
 
 	def create_test_subscribe
 		today = DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")

@@ -26,6 +26,7 @@ class SubscriptionManagerTest < Test::Unit::TestCase
 	end
 
 	def test_subscribe_non_empty_cart
+		login
 		#valid payment id from hpm
 		hpm_payment_id = '2c92c0f83a49193b013a530046103d5a'
 		#add a cart item
@@ -36,7 +37,9 @@ class SubscriptionManagerTest < Test::Unit::TestCase
 
 		actually = ZillaBackend::SubscriptionManager.subscribe_with_current_cart("12345@123.com", hpm_payment_id, cart)
 		
-		assert_equal actually[:success] == nil ? actually : actually[:success], true
+		puts 'Hello: ' + actually.inspect
+
+		assert_equal actually, "INVALID_PMID"
 	end
 
 	def test_preview_non_empty_cart

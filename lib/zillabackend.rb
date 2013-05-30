@@ -7,7 +7,7 @@ module ZillaBackend
 	autoload :Cart, 		 	   'zillabackend/cart'
 	autoload :Config, 		 	   'zillabackend/config'
 	autoload :SubscriptionManager, 'zillabackend/subscription_manager'
-	autoload :AccountManager, 'zillabackend/account_manager'
-	autoload :PaymentManager, 'zillabackend/payment_manager'
-	autoload :Amender, 'zillabackend/amender'
+	autoload :AccountManager,      'zillabackend/account_manager'
+	autoload :PaymentManager,      'zillabackend/payment_manager'
+	autoload :Amender,             'zillabackend/amender'
 end
