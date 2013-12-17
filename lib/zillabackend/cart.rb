@@ -17,7 +17,7 @@ module ZillaBackend
 			new_cart_item.rate_plan_id = rate_plan_id
 			new_cart_item.quantity = quantity
 			new_cart_item.item_id = self.latest_item_id
-		#	self.latest_item_id += 1
+			# self.latest_item_id += 1
 
 			plan = ZillaBackend::Catalog.get_rate_plan rate_plan_id
 			new_cart_item.uom = plan["uom"] ||= ''	

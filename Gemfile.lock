@@ -1,6 +1,11 @@
 GIT
+<<<<<<< HEAD
   remote: https://github.com/mikesull7288/zuora.git
   revision: 26d44da7ee926866ab756bbc8c5c69417d07bfdb
+=======
+  remote: https://github.com/zuorasc/zuora.git
+  revision: 92f4e6f29f8db141806387785eaa93e851d5c25b
+>>>>>>> 7c9b56e33bdfcc1989a8fc587109cfed358bc89e
   branch: dealermatch
   specs:
     zuora (0.0.1)
