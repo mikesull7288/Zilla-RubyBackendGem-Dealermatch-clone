@@ -12,11 +12,12 @@ module ZillaBackend
 		end
 
 		def add_cart_item(rate_plan_id, quantity)
+			self.clear_cart
 			new_cart_item = ZillaBackend::Models::CartItem.new
 			new_cart_item.rate_plan_id = rate_plan_id
 			new_cart_item.quantity = quantity
 			new_cart_item.item_id = self.latest_item_id
-			self.latest_item_id += 1
+			# self.latest_item_id += 1
 
 			plan = ZillaBackend::Catalog.get_rate_plan rate_plan_id
 			new_cart_item.uom = plan["uom"] ||= ''	

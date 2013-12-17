@@ -37,12 +37,12 @@ module ZillaBackend
 
 	    def self.set_defaults
 	    	defaults = Hash.new
-				defaults[:show_all_products] = true
-				defaults[:grouping_field] = "zillacloudcompany__c"
+				defaults[:show_all_products] = false
+				defaults[:grouping_field] = "EnableforSelfSignup__c"
 				
 				defaults[:grouping_field_values] = Array.new
-				defaults[:grouping_field_values] << "Base Product"
-				defaults[:grouping_field_values] << "Add-On Product"
+				defaults[:grouping_field_values] << "YES"
+				# defaults[:grouping_field_values] << "Add-On Product"
 
 				defaults[:cache_path] = "product_cache.txt"
 
@@ -56,9 +56,9 @@ module ZillaBackend
 				defaults[:make_sfdc_account] = false
 
 				#HPM Info
-				defaults[:page_id] = '2c92c0f93a3055aa013a438f86cb5bcd'
-				defaults[:tenant_id] = 10717
-				defaults[:api_security_key] = 'Y46yy3LMIBRIeqwzk_u4-4YvBGU_HHs79PCHcoihq90='
+				defaults[:page_id] = '2c92c0f942c691320142dd4cac443685'
+				defaults[:tenant_id] = 12029
+				defaults[:api_security_key] = 'pXPAiVakkMYaIewJ2817Rm7HHjrYQWRa5Wbl33WBlwY='
 				defaults[:app_url] = 'https://apisandbox.zuora.com'
 
 				update!(defaults)

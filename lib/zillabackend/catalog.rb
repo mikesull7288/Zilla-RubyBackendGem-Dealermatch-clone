@@ -42,7 +42,13 @@ module ZillaBackend
 					catalog_product.name = p.name
 					catalog_product.description = p.description ||= ""
 					#get rate plans for this product
+					# query_str = "SELECT CreatedById, CreatedDate, Description, EffectiveEndDate, EffectiveStartDate, Name, ProductId, UpdatedById, UpdatedDate, Id, SelfSignupPrice__c FROM ProductRatePlan WHERE "
 					rate_plan_where = "ProductId='" + catalog_product.id + "' and EffectiveStartDate<'"+date+"' and EffectiveEndDate>'"+date+"' "
+					if(!Config.show_all_products)
+						where = " AND " + Config.grouping_field + " = '" + fg + "'"
+						rate_plan_where += where
+					end
+					# query_str += rate_plan_where
 					rate_plans = Zuora::Objects::ProductRatePlan.where(rate_plan_where)
 					catalog_product.rate_plans = Array.new
 					rate_plans.each do |rp|
@@ -51,6 +57,7 @@ module ZillaBackend
 						catalog_rate_plan.name = rp.name
 						catalog_rate_plan.product_name = p.name
 						catalog_rate_plan.description = p.description ||= ""
+						catalog_rate_plan.self_signup_price__c = rp.self_signup_price__c
 						catalog_rate_plan.charges = Array.new
 						catalog_rate_plan.uom = ""
 						catalog_rate_plan.quantifiable = false
