@@ -110,7 +110,7 @@ module ZillaBackend
 			active_sub
 		end
 
-		def self.subscribe_with_current_cart(user_email, pm_id, cart)
+		def self.subscribe_with_current_cart(user_name, user_email, pm_id, cart)
 
 			if(cart == nil || cart.cart_items == nil)
 				return 'CART_NOT_INITIALIZED'
@@ -147,10 +147,12 @@ module ZillaBackend
 			phone = pm_result.phone ||= ''
 
 			today = DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")
+			next_month = (DateTime.now + 1.month).strftime("%Y-%m-%dT%H:%M:%S")
+
 			#setup the account
 			acc = Zuora::Objects::Account.new
 			acc.currency = Config.default_currency
-			acc.name = user_email
+			acc.name = user_name
 			acc.payment_term = Config.default_payment_term
 			acc.batch = Config.default_batch
 			acc.bill_cycle_day = 0
@@ -176,12 +178,12 @@ module ZillaBackend
 
 			#Set up subscription
 			subscription = Zuora::Objects::Subscription.new
-			subscription.contract_effective_date = today
-			subscription.service_activation_date = today
-			subscription.contract_acceptance_date = today
+			# subscription.contract_effective_date = today
+			# subscription.service_activation_date = next_month
+			# subscription.contract_acceptance_date = next_month
 			subscription.term_start_date = today
 			subscription.term_type = "EVERGREEN"
-			subscription.status = "Active"
+			subscription.status = "Draft"
 
 			pandc = Array.new
 			#make a product rate plan for each cart item
@@ -208,7 +210,7 @@ module ZillaBackend
 			#preview options
 			sub_request.preview_options = {:enable_preview_mode => false, :number_of_periods => 1}
 			#susbcribe options
-			sub_request.subscribe_options = {:generate_invoice => true, :process_payments => true}
+			sub_request.subscribe_options = {:generate_invoice => false, :process_payments => false}
 			
 			sub_request.account = acc
 			sub_request.bill_to_contact = con
@@ -231,6 +233,7 @@ module ZillaBackend
 			end
 
 			today = DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")
+			next_month = (DateTime.now + 1.month).strftime("%Y-%m-%dT%H:%M:%S")
 
 			#setup the SubscribeRequest
 			sub_request = Zuora::Objects::SubscribeRequest.new
@@ -253,8 +256,8 @@ module ZillaBackend
 			#setup the susbcription
 			sub = Zuora::Objects::Subscription.new
 			sub.contract_effective_date = today
-			sub.service_activation_date = today
-			sub.contract_acceptance_date = today
+			sub.service_activation_date = next_month
+			sub.contract_acceptance_date = next_month
 			sub.term_start_date = today
 			sub.term_type = "EVERGREEN"
 			pandc = Array.new
