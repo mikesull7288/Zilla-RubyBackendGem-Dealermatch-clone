@@ -44,7 +44,7 @@ module ZillaBackend
 				defaults[:grouping_field_values] << "YES"
 				# defaults[:grouping_field_values] << "Add-On Product"
 
-				defaults[:cache_path] = "product_cache.txt"
+				defaults[:cache_path] = "/home/msullivan/zilla-rb-dealermatch/Zilla-Ruby/product_cache.txt"
 
 				defaults[:default_autopay] = true
 				defaults[:default_currency] = "USD"

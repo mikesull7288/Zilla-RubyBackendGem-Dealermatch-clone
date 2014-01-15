@@ -178,12 +178,12 @@ module ZillaBackend
 
 			#Set up subscription
 			subscription = Zuora::Objects::Subscription.new
-			# subscription.contract_effective_date = today
-			# subscription.service_activation_date = next_month
-			# subscription.contract_acceptance_date = next_month
+			subscription.contract_effective_date = today
+			subscription.service_activation_date = next_month
+			subscription.contract_acceptance_date = next_month
 			subscription.term_start_date = today
 			subscription.term_type = "EVERGREEN"
-			subscription.status = "Draft"
+			subscription.status = "Active"
 
 			pandc = Array.new
 			#make a product rate plan for each cart item
