@@ -2,6 +2,7 @@ module ZillaBackend
 	#
 	#Holds all the config in a hash and sets some default values
 	#
+	 puts Dir.pwd 
 	class Config
 		def self.initialize(data={})
      	 	@data = {}
