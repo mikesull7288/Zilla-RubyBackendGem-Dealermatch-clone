@@ -45,8 +45,8 @@ module ZillaBackend
 				defaults[:grouping_field_values] << "Base Product"
 				defaults[:grouping_field_values] << "Add-On Product"
 
-				defaults[:zilla_path] = "/home/cdea/Zilla-Ruby-clone-style"
-				defaults[:cache_path] = defaults[:zilla_path] + "product_cache.txt"
+				
+				defaults[:cache_path] = Rails.root.join( "product_cache.txt")
 
 				defaults[:default_autopay] = true
 				defaults[:default_currency] = "USD"
